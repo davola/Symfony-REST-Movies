@@ -1,6 +1,4 @@
-# Symfony-REST-Movies
-
-# Task - 001
+# Movies Task
 
 ## Introduction
 
