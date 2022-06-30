@@ -62,4 +62,5 @@
 /var/
 /vendor/
 NULL
+NUL
 ###< symfony/framework-bundle ###
