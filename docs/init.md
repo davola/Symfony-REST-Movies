@@ -10,26 +10,9 @@
 ```json
 # Working POST
 {
-  "name": "Peli!",
-  "casts": [
-    {
-      "name": "Di caprio"
-    },{
-      "name": "Cruise"
-    }
-  ],
-  "director": {
-    "name": "Spielberg"
-  },
-  "ratings": [
-    {
-      "name": "imdb",
-      "value": 8.5
-    },{
-      "name": "tomate",
-      "value": 8.9
-    }
-  ]
+  "name": "Titanic",
+  "ratings": {"imdb": 2.5, "tomate": 3.1},
+  "director": "Spielberg"
 }
 ```
 
@@ -38,27 +21,15 @@
 ```json
 # Working GET
 [
-  {
-    "id": 0,
-    "name": "string",
-    "casts": [
-      {
-        "id": 0,
-        "name": "string"
-      }
-    ],
-    "director": {
-      "id": 0,
-      "name": "string"
-    },
-    "ratings": [
-      {
-        "id": 0,
-        "name": "string",
-        "value": 0,
-        "movie": "string"
-      }
-    ]
-  }
+    {
+        "id": 1,
+        "name": "Titanic",
+        "casts": [],
+        "director": "Spielberg",
+        "ratings": {
+            "imdb": 2.5,
+            "tomate": 3.1
+        }
+    }
 ]
 ```

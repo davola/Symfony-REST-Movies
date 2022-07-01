@@ -7,11 +7,14 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource(
  *     collectionOperations={"get","post"},
- *     itemOperations={"get"}
+ *     itemOperations={"get"},
+ *     denormalizationContext={"groups"={"movies:write"}}
  * )
  * @ORM\Entity(repositoryClass=MovieRepository::class)
  */
@@ -26,6 +29,7 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"movies:write"})
      */
     private $name;
 
@@ -42,6 +46,7 @@ class Movie
 
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"movies:write"})
      */
     private $ratings;
 
@@ -92,9 +97,18 @@ class Movie
         return $this;
     }
 
-    public function getDirector(): ?Director
+    private function getDirector(): ?Director
     {
         return $this->director;
+    }
+
+    /**
+     * @SerializedName("director")
+     * @return string|null
+     */
+    public function getDirectorName()
+    {
+        return $this->getDirector()->getName();
     }
 
     public function setDirector(?Director $Director): self
@@ -105,11 +119,38 @@ class Movie
     }
 
     /**
+     * @Groups({"movies:write"})
+     * @SerializedName("director")
+     */
+    public function setDirectorByName(string $name): self
+    {
+        $director = (new Director())->setName($name);
+        $this->setDirector($director);
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Rating>
      */
-    public function getRatings(): Collection
+    private function getRatings(): Collection
     {
         return $this->ratings;
+    }
+
+    /**
+     * @return \stdClass
+     * @SerializedName("ratings")
+     */
+    public function getRatingsSerialized(): \stdClass
+    {
+        $ratings = (new \stdClass());
+        foreach ($this->getRatings() as $rating) {
+            /** @var Rating $rating */
+            $ratings->{$rating->getName()} = $rating->getValue();
+        }
+
+        return $ratings;
     }
 
     public function addRating(Rating $rating): self
@@ -129,6 +170,20 @@ class Movie
             if ($rating->getMovie() === $this) {
                 $rating->setMovie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @Groups({"movies:write"})
+     * @SerializedName("ratings")
+     */
+    public function setRatingByObject(array $ratingObj): self
+    {
+        foreach ($ratingObj as $name => $value) {
+            $rating = (new Rating())->setName($name)->setValue($value);
+            $this->addRating($rating);
         }
 
         return $this;
