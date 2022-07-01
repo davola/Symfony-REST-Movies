@@ -28,10 +28,10 @@ class Rating
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Movie::class, inversedBy="ratings")
+     * @ORM\ManyToOne(targetEntity=Movie::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Movie;
+    private $movie;
 
     public function getId(): ?int
     {
@@ -64,12 +64,12 @@ class Rating
 
     public function getMovie(): ?Movie
     {
-        return $this->Movie;
+        return $this->movie;
     }
 
     public function setMovie(?Movie $Movie): self
     {
-        $this->Movie = $Movie;
+        $this->movie = $Movie;
 
         return $this;
     }

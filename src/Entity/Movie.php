@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=MovieRepository::class)
  */
 class Movie
@@ -25,24 +27,24 @@ class Movie
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Actor::class)
+     * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
      */
-    private $Casts;
+    private $casts;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Director::class)
+     * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Director;
+    private $director;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="Movie", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
      */
     private $ratings;
 
     public function __construct()
     {
-        $this->Casts = new ArrayCollection();
+        $this->casts = new ArrayCollection();
         $this->ratings = new ArrayCollection();
     }
 
@@ -68,13 +70,13 @@ class Movie
      */
     public function getCasts(): Collection
     {
-        return $this->Casts;
+        return $this->casts;
     }
 
     public function addCast(Actor $cast): self
     {
-        if (!$this->Casts->contains($cast)) {
-            $this->Casts[] = $cast;
+        if (!$this->casts->contains($cast)) {
+            $this->casts[] = $cast;
         }
 
         return $this;
@@ -82,19 +84,19 @@ class Movie
 
     public function removeCast(Actor $cast): self
     {
-        $this->Casts->removeElement($cast);
+        $this->casts->removeElement($cast);
 
         return $this;
     }
 
     public function getDirector(): ?Director
     {
-        return $this->Director;
+        return $this->director;
     }
 
     public function setDirector(?Director $Director): self
     {
-        $this->Director = $Director;
+        $this->director = $Director;
 
         return $this;
     }
