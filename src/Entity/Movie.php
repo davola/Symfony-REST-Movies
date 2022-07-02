@@ -7,8 +7,10 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * @ApiResource(
@@ -49,6 +51,13 @@ class Movie
      * @Groups({"movies:write"})
      */
     private $ratings;
+
+    /**
+     * @ORM\Column(type="date")
+     * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
+     * @Groups({"movies:write"})
+     */
+    private $releaseDate;
 
     public function __construct()
     {
@@ -185,6 +194,18 @@ class Movie
             $rating = (new Rating())->setName($name)->setValue($value);
             $this->addRating($rating);
         }
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(\DateTimeInterface $release_date): self
+    {
+        $this->releaseDate = $release_date;
 
         return $this;
     }
