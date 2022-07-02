@@ -2,12 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
+ * @ApiResource(
+ *     collectionOperations={"get","post"},
+ *     itemOperations={"get"},
+ *     denormalizationContext={"groups"={"movies:write"}}
+ * )
  * @ORM\Entity(repositoryClass=MovieRepository::class)
  */
 class Movie
@@ -21,28 +31,37 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"movies:write"})
      */
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Actor::class)
+     * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
      */
-    private $Casts;
+    private $casts;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Director::class)
+     * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Director;
+    private $director;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="Movie", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"movies:write"})
      */
     private $ratings;
 
+    /**
+     * @ORM\Column(type="date")
+     * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
+     * @Groups({"movies:write"})
+     */
+    private $releaseDate;
+
     public function __construct()
     {
-        $this->Casts = new ArrayCollection();
+        $this->casts = new ArrayCollection();
         $this->ratings = new ArrayCollection();
     }
 
@@ -66,15 +85,30 @@ class Movie
     /**
      * @return Collection<int, Actor>
      */
-    public function getCasts(): Collection
+    private function getCasts(): Collection
     {
-        return $this->Casts;
+        return $this->casts;
+    }
+
+    /**
+     * @return array
+     * @SerializedName("casts")
+     */
+    public function getCastsSerialized(): array
+    {
+        $casts = [];
+        foreach ($this->getCasts() as $actor) {
+            /** @var Actor $actor */
+            $casts[] = $actor->getName();
+        }
+
+        return $casts;
     }
 
     public function addCast(Actor $cast): self
     {
-        if (!$this->Casts->contains($cast)) {
-            $this->Casts[] = $cast;
+        if (!$this->casts->contains($cast)) {
+            $this->casts[] = $cast;
         }
 
         return $this;
@@ -82,19 +116,54 @@ class Movie
 
     public function removeCast(Actor $cast): self
     {
-        $this->Casts->removeElement($cast);
+        $this->casts->removeElement($cast);
 
         return $this;
     }
 
-    public function getDirector(): ?Director
+    /**
+     * @Groups({"movies:write"})
+     * @SerializedName("casts")
+     */
+    public function setCastByArray(array $casts): self
     {
-        return $this->Director;
+        foreach ($casts as $name) {
+            $cast = (new Actor())->setName($name);
+            $this->addCast($cast);
+        }
+
+        return $this;
+    }
+
+    private function getDirector(): ?Director
+    {
+        return $this->director;
+    }
+
+    /**
+     * @SerializedName("director")
+     * @return string|null
+     */
+    public function getDirectorName()
+    {
+        return $this->getDirector()->getName();
     }
 
     public function setDirector(?Director $Director): self
     {
-        $this->Director = $Director;
+        $this->director = $Director;
+
+        return $this;
+    }
+
+    /**
+     * @Groups({"movies:write"})
+     * @SerializedName("director")
+     */
+    public function setDirectorByName(string $name): self
+    {
+        $director = (new Director())->setName($name);
+        $this->setDirector($director);
 
         return $this;
     }
@@ -102,9 +171,24 @@ class Movie
     /**
      * @return Collection<int, Rating>
      */
-    public function getRatings(): Collection
+    private function getRatings(): Collection
     {
         return $this->ratings;
+    }
+
+    /**
+     * @return \stdClass
+     * @SerializedName("ratings")
+     */
+    public function getRatingsSerialized(): \stdClass
+    {
+        $ratings = (new \stdClass());
+        foreach ($this->getRatings() as $rating) {
+            /** @var Rating $rating */
+            $ratings->{$rating->getName()} = $rating->getValue();
+        }
+
+        return $ratings;
     }
 
     public function addRating(Rating $rating): self
@@ -125,6 +209,32 @@ class Movie
                 $rating->setMovie(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @Groups({"movies:write"})
+     * @SerializedName("ratings")
+     */
+    public function setRatingByObject(array $ratingObj): self
+    {
+        foreach ($ratingObj as $name => $value) {
+            $rating = (new Rating())->setName($name)->setValue($value);
+            $this->addRating($rating);
+        }
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(\DateTimeInterface $release_date): self
+    {
+        $this->releaseDate = $release_date;
 
         return $this;
     }

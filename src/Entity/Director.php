@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DirectorRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DirectorRepository::class)
@@ -19,6 +20,7 @@ class Director
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"movies:write"})
      */
     private $name;
 
