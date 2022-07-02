@@ -15,7 +15,7 @@
         "DiCaprio",
         "Kate Winslet"
     ],
-    "releaseDate": "18-01-1998",
+    "release_date": "18-01-1998",
     "director": "James Cameron",
     "ratings": {
         "imdb": 7.8,
@@ -32,7 +32,7 @@
     {
         "id": 1,
         "name": "Titanic",
-        "releaseDate": "18-01-1998",
+        "release_date": "18-01-1998",
         "casts": [
             "DiCaprio",
             "Kate Winslet"
