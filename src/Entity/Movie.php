@@ -85,9 +85,24 @@ class Movie
     /**
      * @return Collection<int, Actor>
      */
-    public function getCasts(): Collection
+    private function getCasts(): Collection
     {
         return $this->casts;
+    }
+
+    /**
+     * @return array
+     * @SerializedName("casts")
+     */
+    public function getCastsSerialized(): array
+    {
+        $casts = [];
+        foreach ($this->getCasts() as $actor) {
+            /** @var Actor $actor */
+            $casts[] = $actor->getName();
+        }
+
+        return $casts;
     }
 
     public function addCast(Actor $cast): self
@@ -102,6 +117,20 @@ class Movie
     public function removeCast(Actor $cast): self
     {
         $this->casts->removeElement($cast);
+
+        return $this;
+    }
+
+    /**
+     * @Groups({"movies:write"})
+     * @SerializedName("casts")
+     */
+    public function setCastByArray(array $casts): self
+    {
+        foreach ($casts as $name) {
+            $cast = (new Actor())->setName($name);
+            $this->addCast($cast);
+        }
 
         return $this;
     }
