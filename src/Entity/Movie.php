@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,18 +32,21 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      * @Groups({"movies:write"})
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
+     * @Assert\NotBlank()
      */
     private $casts;
 
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $director;
 
@@ -56,6 +60,7 @@ class Movie
      * @ORM\Column(type="date")
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
      * @Groups({"movies:write"})
+     * @Assert\Type("\DateTimeInterface")
      */
     private $releaseDate;
 
