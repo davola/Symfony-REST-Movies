@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +32,7 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      * @Groups({"movies:write"})
      */
     private $name;
@@ -43,6 +45,7 @@ class Movie
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $director;
 
@@ -53,9 +56,10 @@ class Movie
     private $ratings;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=false)
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
      * @Groups({"movies:write"})
+     * @Assert\NotNull()
      */
     private $releaseDate;
 
