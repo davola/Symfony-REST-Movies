@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=RatingRepository::class)
@@ -20,13 +21,16 @@ class Rating
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(pattern="/[0-9]+\.[0-9]+/", message="The rating value has to be a decimal number")
      */
     private $value;
 
@@ -34,6 +38,7 @@ class Rating
      * @ORM\ManyToOne(targetEntity=Movie::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"movies:write"})
+     * @Assert\NotNull()
      */
     private $movie;
 

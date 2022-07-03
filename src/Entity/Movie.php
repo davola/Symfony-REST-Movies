@@ -41,21 +41,19 @@ class Movie
 
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
-     * @Groups({"movies:read", "movies:write"})
+     * @Groups({"movies:read"})
      */
     private $casts;
 
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank()
-     * @Groups({"movies:write"})
      */
     private $director;
 
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"movies:read", "movies:write"})
+     * @Groups({"movies:read"})
      */
     private $ratings;
 
@@ -71,6 +69,7 @@ class Movie
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"movies:read", "movies:write"})
+     * @Assert\Valid()
      */
     private $owner;
 
@@ -106,16 +105,16 @@ class Movie
     }
 
     /**
-     * @return array
+     * @return ArrayCollection<string>
      * @SerializedName("casts")
      * @Groups({"movies:read"})
      */
-    public function getCastsSerialized(): array
+    public function getCastsSerialized(): ArrayCollection
     {
-        $casts = [];
+        $casts = new ArrayCollection();
         foreach ($this->getCasts() as $actor) {
             /** @var Actor $actor */
-            $casts[] = $actor->getName();
+            $casts->add($actor->getName());
         }
 
         return $casts;
@@ -194,15 +193,15 @@ class Movie
     }
 
     /**
-     * @return \stdClass
      * @SerializedName("ratings")
+     * @Groups({"movies:read"})
      */
-    public function getRatingsSerialized(): \stdClass
+    public function getRatingsSerialized(): array
     {
-        $ratings = (new \stdClass());
+        $ratings = [];
         foreach ($this->getRatings() as $rating) {
             /** @var Rating $rating */
-            $ratings->{$rating->getName()} = $rating->getValue();
+            $ratings[$rating->getName()] = $rating->getValue();
         }
 
         return $ratings;
