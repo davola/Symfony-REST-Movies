@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
  * @ApiResource(
  *     collectionOperations={"get","post"},
  *     itemOperations={"get"},
+ *     normalizationContext={"groups"={"movies:read"}},
  *     denormalizationContext={"groups"={"movies:write"}}
  * )
  * @ORM\Entity(repositoryClass=MovieRepository::class)
@@ -27,18 +28,20 @@ class Movie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"movies:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
+     * @Groups({"movies:read", "movies:write"})
      */
     private $casts;
 
@@ -46,22 +49,30 @@ class Movie
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
+     * @Groups({"movies:write"})
      */
     private $director;
 
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
      */
     private $ratings;
 
     /**
      * @ORM\Column(type="date", nullable=false)
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
      * @Assert\NotNull()
      */
     private $releaseDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"movies:read", "movies:write"})
+     */
+    private $owner;
 
     public function __construct()
     {
@@ -97,6 +108,7 @@ class Movie
     /**
      * @return array
      * @SerializedName("casts")
+     * @Groups({"movies:read"})
      */
     public function getCastsSerialized(): array
     {
@@ -147,6 +159,7 @@ class Movie
     /**
      * @SerializedName("director")
      * @return string|null
+     * @Groups({"movies:read"})
      */
     public function getDirectorName()
     {
@@ -239,6 +252,18 @@ class Movie
     public function setReleaseDate(\DateTimeInterface $release_date): self
     {
         $this->releaseDate = $release_date;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }
