@@ -57,10 +57,10 @@ class Movie
     private $ratings;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=false)
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
      * @Groups({"movies:write"})
-     * @Assert\Type("\DateTimeInterface")
+     * @Assert\NotNull()
      */
     private $releaseDate;
 
