@@ -40,6 +40,7 @@ class Movie
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
      * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
     private $casts;
 
@@ -53,6 +54,8 @@ class Movie
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
      * @Groups({"movies:write"})
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
     private $ratings;
 
