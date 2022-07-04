@@ -17,16 +17,15 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class ApiTokenAuthenticator extends AbstractAuthenticator
 {
-    private UserRepository $repository;
+    private UserRepository $userRepository;
 
     public function __construct(UserRepository $repository) {
-        $this->repository = $repository;
+        $this->userRepository = $repository;
     }
 
     public function supports(Request $request): ?bool
     {
-        return false;
-        return $request->headers->has('x-api-token');
+        return $request->headers->has('x-api-token') || strpos($request->headers->get('accept'), 'text/html');
     }
 
     public function authenticate(Request $request): Passport
@@ -39,7 +38,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
         return new SelfValidatingPassport(
             new UserBadge($apiToken, function ($apiToken) {
-               $user = $this->repository->findByApiToken($apiToken);
+               $user = $this->userRepository->findByApiToken($apiToken);
 
                if (!$user){
                    throw new UserNotFoundException();
