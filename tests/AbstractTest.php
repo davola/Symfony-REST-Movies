@@ -44,7 +44,7 @@ abstract class AbstractTest extends ApiTestCase
 
         return static::createClient([], [
             'headers' => [
-                'x-api-token' => $token,
+                'Authorization' => "Bearer $token",
                 'Accept' => '*/*',
             ]]
         );
