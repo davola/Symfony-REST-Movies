@@ -29,7 +29,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
             return true;
         }
 
-        return !strpos($request->headers->get('accept'), 'text/html');
+        return false;
     }
 
     public function authenticate(Request $request): Passport
