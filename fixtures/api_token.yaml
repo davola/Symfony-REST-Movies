@@ -1,0 +1,7 @@
+App\Entity\ApiToken:
+    token1:
+        token: 'tnEhC7df8yQIxCQTBo2avqxXY2HYy242JgopGFhQZAIVwmq4Owq8dbDeiYdsI9Z2' 
+        user: '@user1'
+    token2:
+        token: 'wOmjOTWeILsM7Gulb6ObyzCxx6ZbVxh6MUe9iQssENT8TKjpXtjviC6AoXKhjzzT'
+        user: '@user2'
