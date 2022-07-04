@@ -9,8 +9,6 @@ use App\Repository\ApiTokenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 abstract class AbstractTest extends ApiTestCase
@@ -19,23 +17,34 @@ abstract class AbstractTest extends ApiTestCase
 
     protected static HttpClientInterface $client;
     protected EntityManagerInterface $entityManager;
+    protected static array $tokens;
+
+    public static function setUpBeforeClass(): void
+    {
+        static::$tokens = [];
+    }
 
     public function setUp(): void
     {
         $kernel = self::bootKernel();
         $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        static::$client =  static::createClient([], [
+        static::$client = static::createClient([], [
                 'headers' => [
-                    'Accept' => '*/*'
+                    'Accept' => 'application/json'
                 ]
             ]
         );
     }
 
-    protected static function getClient(): HttpClientInterface
+    protected static function getClient()
     {
-        return static::$client;
+        return static::createClient([], [
+                'headers' => [
+                    'Accept' => 'application/json'
+                ]
+            ]
+        );
     }
 
     protected function getClientForCredentials($email, $password): HttpClientInterface
@@ -55,22 +64,20 @@ abstract class AbstractTest extends ApiTestCase
      */
     protected function getToken($email, $password): string
     {
-        $user = $this->getUserRepository()->findOneBy([
-            'email' => $email,
-            'password' => $password
-        ]);
-
-        if (!$user){
-            throw new UserNotFoundException('Invalid credentials', Response::HTTP_BAD_REQUEST);
+        if (isset(static::$tokens[$email])){
+            return static::$tokens[$email];
         }
 
-        $apiToken = $this->getApiTokenRepository()->findOneBy(['user' =>$user]);
+        $credentials = static::createClient()->request('POST', '/api/login_check', ['json' => [
+            'username' => $email,
+            'password' => $password,
+        ]]);
 
-        if (!$apiToken){
-            throw new T('No valid token for user', Response::HTTP_BAD_REQUEST);
-        }
+        $response = json_decode($credentials->getContent(), true);
 
-        return $apiToken->getToken();
+        static::$tokens[$email] = $response['token'];
+
+        return $response['token'];
     }
 
     private function getUserRepository():UserRepository
