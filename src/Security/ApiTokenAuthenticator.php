@@ -25,7 +25,11 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('x-api-token') || strpos($request->headers->get('accept'), 'text/html');
+        if ($request->headers->has('x-api-token')){
+            return true;
+        }
+
+        return !strpos($request->headers->get('accept'), 'text/html');
     }
 
     public function authenticate(Request $request): Passport
@@ -33,7 +37,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         $apiToken = $request->headers->get('x-api-token');
 
         if (null === $apiToken){
-            throw new CustomUserMessageAuthenticationException('No API token provided.');
+            throw new CustomUserMessageAuthenticationException('No `x-api-token` header provided.');
         }
 
         return new SelfValidatingPassport(
