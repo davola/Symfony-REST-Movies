@@ -1,0 +1,6 @@
+App\Entity\Movie:
+    movie_{1..10}:
+        name: <company()>
+        releaseDate: <datetime()>
+        director: '@director_*'
+        owner: '@user*'

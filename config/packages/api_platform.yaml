@@ -6,6 +6,19 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:
-        versions: [3]
+        versions: [3]   
+    show_webby: false
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+    formats:
+        json:
+            mime_types:
+                - application/json
+        jsonld:
+            mime_types:
+                - application/ld+json
+        html:
+            mime_types:
+                - text/html
+
+    
 
