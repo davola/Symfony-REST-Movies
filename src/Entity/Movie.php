@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
  * @ApiResource(
  *     collectionOperations={"get","post"},
  *     itemOperations={"get"},
+ *     normalizationContext={"groups"={"movies:read"}},
  *     denormalizationContext={"groups"={"movies:write"}}
  * )
  * @ORM\Entity(repositoryClass=MovieRepository::class)
@@ -27,41 +28,50 @@ class Movie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"movies:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
+     * @Groups({"movies:read"})
      */
     private $casts;
 
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank()
      */
     private $director;
 
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read"})
      */
     private $ratings;
 
     /**
      * @ORM\Column(type="date", nullable=false)
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
-     * @Groups({"movies:write"})
+     * @Groups({"movies:read", "movies:write"})
      * @Assert\NotNull()
      */
     private $releaseDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"movies:read", "movies:write"})
+     * @Assert\Valid()
+     */
+    private $owner;
 
     public function __construct()
     {
@@ -95,15 +105,16 @@ class Movie
     }
 
     /**
-     * @return array
+     * @return ArrayCollection<string>
      * @SerializedName("casts")
+     * @Groups({"movies:read"})
      */
-    public function getCastsSerialized(): array
+    public function getCastsSerialized(): ArrayCollection
     {
-        $casts = [];
+        $casts = new ArrayCollection();
         foreach ($this->getCasts() as $actor) {
             /** @var Actor $actor */
-            $casts[] = $actor->getName();
+            $casts->add($actor->getName());
         }
 
         return $casts;
@@ -147,6 +158,7 @@ class Movie
     /**
      * @SerializedName("director")
      * @return string|null
+     * @Groups({"movies:read"})
      */
     public function getDirectorName()
     {
@@ -181,15 +193,15 @@ class Movie
     }
 
     /**
-     * @return \stdClass
      * @SerializedName("ratings")
+     * @Groups({"movies:read"})
      */
-    public function getRatingsSerialized(): \stdClass
+    public function getRatingsSerialized(): array
     {
-        $ratings = (new \stdClass());
+        $ratings = [];
         foreach ($this->getRatings() as $rating) {
             /** @var Rating $rating */
-            $ratings->{$rating->getName()} = $rating->getValue();
+            $ratings[$rating->getName()] = $rating->getValue();
         }
 
         return $ratings;
@@ -239,6 +251,18 @@ class Movie
     public function setReleaseDate(\DateTimeInterface $release_date): self
     {
         $this->releaseDate = $release_date;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

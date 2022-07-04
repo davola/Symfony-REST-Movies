@@ -15,7 +15,8 @@ Working post and get endpoints
     "ratings": {
         "imdb": 7.8,
         "rotten_tomatto": 8.2
-    }
+    },
+    "owner": "/api/v1/users/1"
 }
 ```
 
