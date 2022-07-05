@@ -15,8 +15,13 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * @ApiResource(
- *     collectionOperations={"get","post"},
- *     itemOperations={"get"},
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={
+ *          "get"={
+ *              "access_control"="is_granted('ROLE_USER') and object.getOwner() == user",
+ *              "message"="User must be owner"
+ *          }
+ *      },
  *     normalizationContext={"groups"={"movies:read"}},
  *     denormalizationContext={"groups"={"movies:write"}}
  * )
@@ -68,7 +73,7 @@ class Movie
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"movies:read", "movies:write"})
+     * @Groups({"movies:read"})
      * @Assert\Valid()
      */
     private $owner;

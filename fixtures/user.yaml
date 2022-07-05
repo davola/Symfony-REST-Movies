@@ -1,10 +1,10 @@
 App\Entity\User:
     user1:
-        email: 'user1@example.com'
-        password: 'user1'
+        email: 'user1@example.com'        
+        password: <('$2y$13$ADod7TXKzvYbvfqh1tegxOENUbgKq58EVwur6/yGH46xY22kMRTXS')>
     user2:
         email: 'user2@example.com'
-        password: 'user2'
+        password: <('$2y$13$ZdCdrtytanLkEKA1qI5VBOu5rwy0g4A0/ADfk/2Xo8Ydanbu6Dar.')>
     user3:
         email: 'user3@example.com'
-        password: 'user3'
+        password: <('$2y$13$AGoxG3c5gzSJ1XoFAftjj.aIvOkUwQyHHfjbGvGHKQL9ym93cZ1cS')>
