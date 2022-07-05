@@ -15,11 +15,13 @@ final class MovieMailSubscriber implements EventSubscriberInterface
 {
     private $mailer;
     private $skipSendEmail;
+    private $emailFrom;
 
-    public function __construct(MailerInterface $mailer, $skipSendEmail)
+    public function __construct(MailerInterface $mailer, $emailFrom, $skipSendEmail)
     {
         $this->mailer = $mailer;
         $this->skipSendEmail = $skipSendEmail;
+        $this->emailFrom = $emailFrom;
     }
 
     public static function getSubscribedEvents(): array
@@ -43,9 +45,9 @@ final class MovieMailSubscriber implements EventSubscriberInterface
         }
 
         $message = (new Email())
-            ->from('davola@underscreen.com')
-            ->to('davola@underscreen.com')
-            ->subject('A new Movie has been created')
+            ->from(urldecode($this->emailFrom))
+            ->to($movie->getOwner()->getEmail())
+            ->subject("A new movie '{$$movie->getName()}' has been created")
             ->text(sprintf('The movie "(#%d) #%s" has been added.', $movie->getId(), $movie->getName()));
 
         $this->mailer->send($message);

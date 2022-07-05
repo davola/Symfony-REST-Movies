@@ -25,4 +25,5 @@ services:
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
     'App\EventSubscriber\MovieMailSubscriber':
         arguments:
+            $emailFrom: '%env(EMAIL_FROM)%'
             $skipSendEmail: '%env(SKIP_SEND_EMAIL)%'
