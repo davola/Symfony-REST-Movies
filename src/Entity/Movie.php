@@ -15,8 +15,13 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * @ApiResource(
- *     collectionOperations={"get","post"},
- *     itemOperations={"get"},
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={
+ *          "get"={
+ *              "access_control"="is_granted('ROLE_USER') and object.getOwner() == user",
+ *              "message"="User must be owner"
+ *          }
+ *      },
  *     normalizationContext={"groups"={"movies:read"}},
  *     denormalizationContext={"groups"={"movies:write"}}
  * )

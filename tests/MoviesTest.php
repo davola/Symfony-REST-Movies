@@ -11,6 +11,6 @@ class MoviesTest extends AbstractTest
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/json; charset=utf-8');
-        $this->assertCount(10, $response->toArray());
+        $this->assertCount(4, $response->toArray());
     }
 }
