@@ -22,3 +22,9 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        exceptions:
+            Symfony\Component\HttpKernel\Exception\NotFoundHttpException:
+                log_level: debug
+                status_code: 404
+
+            
