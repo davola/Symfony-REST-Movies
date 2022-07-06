@@ -39,6 +39,6 @@ final class MovieCurrentUserListingExtension implements QueryCollectionExtension
         $queryBuilder->andWhere(sprintf('%s.owner = :current_user', $rootAlias));
         $queryBuilder->setParameter('current_user', $user->getId());
 
-        dd($queryBuilder->getQuery()->getSQL(), $queryBuilder->getQuery()->getParameters(), $user);
+        //dump($queryBuilder->getQuery()->getSQL(), $queryBuilder->getQuery()->getParameters(), $user);
     }
 }

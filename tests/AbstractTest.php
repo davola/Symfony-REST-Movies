@@ -8,13 +8,10 @@ use App\Entity\User;
 use App\Repository\ApiTokenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 abstract class AbstractTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
-
     protected static HttpClientInterface $client;
     protected EntityManagerInterface $entityManager;
     protected static array $tokens;
