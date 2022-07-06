@@ -27,3 +27,9 @@ services:
         arguments:
             $emailFrom: '%env(EMAIL_FROM)%'
             $skipSendEmail: '%env(SKIP_SEND_EMAIL)%'
+            
+    'App\OpenApi\JwtDecoratorFactory':
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\JwtDecoratorFactory.inner' ]
+        autoconfigure: false
+        

@@ -1,0 +1,10 @@
+App\Entity\Rating:
+    rating1_a{@movie_*}:
+        name: 'imdb'
+        value: '<numberBetween(5, 10)>'
+        movie: '<current()>'
+    rating_b{@movie_*}:
+        name: 'tomato'
+        value: '<numberBetween(5, 10)>'
+        movie: '<current()>'
+        

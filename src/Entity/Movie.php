@@ -104,9 +104,17 @@ class Movie
     /**
      * @return Collection<int, Actor>
      */
-    private function getCasts(): Collection
+    public function getCasts(): Collection
     {
         return $this->casts;
+    }
+
+
+    public function setCasts(ArrayCollection $casts): self
+    {
+        $this->casts = $casts;
+
+        return $this;
     }
 
     /**
