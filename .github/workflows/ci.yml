@@ -29,3 +29,7 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
+            - name: Setup the environment for tests
+              run: sh bin/reset_db.sh test
+            - name: Run Tests
+              run: vendor/bin/phpunit
