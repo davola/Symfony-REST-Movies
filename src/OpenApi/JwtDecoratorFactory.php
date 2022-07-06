@@ -41,22 +41,18 @@ final class JwtDecoratorFactory implements OpenApiFactoryInterface
                                     'schema' => [
                                         'type' => 'object',
                                         'properties' => [
-                                            'username' => [
+                                            'token' => [
                                                 'type' => 'string',
-                                                'example' => 'user1@example.com',
-                                            ],
-                                            'password' => [
-                                                'type' => 'string',
-                                                'example' => 'user1',
-                                            ],
+                                                'example' => 'some-JWT-token-value',
+                                            ]
                                         ],
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'Retrieves a working token.',
-                    'Some description',
+                    'Retrieves a working JWT token.',
+                    'Retrieves a JWT token',
                     null,
                     [],
                     new RequestBody(
