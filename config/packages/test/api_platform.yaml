@@ -1,6 +1,0 @@
-api_platform:
-    defaults:
-        route_prefix: '/v1'
-    exception_to_status:
-        Symfony\Component\HttpKernel\Exception\NotFoundHttpException: 404
-
