@@ -47,24 +47,24 @@ class Rating
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getValue(): ?float
+    public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue(float $value): self
+    public function setValue($value): self
     {
         $this->value = $value;
 

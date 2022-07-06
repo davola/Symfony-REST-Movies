@@ -8,7 +8,6 @@ class SecurityTest extends AbstractTest
 {
     private const USER_1_MOVIES = [1];
     private const USER_2_MOVIES = [2,3];
-    private const USER_3_MOVIES = [4,5,6];
     private const ALL_MOVIES = [1,2,3,4,5,6];
 
     public function test_user_1_only_lists_movies_he_owns(): void
@@ -23,12 +22,6 @@ class SecurityTest extends AbstractTest
         $this->assertCount(2, $results);
     }
 
-    public function test_user_3_only_lists_movies_he_owns(): void
-    {
-        $results = $this->assertLoggedInUserIsMoviesOwner('user3@example.com', 'user3');
-        $this->assertCount(3, $results);
-    }
-
     public function test_user_1_only_reads_movies_he_owns(): void
     {
         $client = $this->getClientForCredentials('user1@example.com', 'user1');
@@ -41,13 +34,6 @@ class SecurityTest extends AbstractTest
         $client = $this->getClientForCredentials('user2@example.com', 'user2');
         $this->assertUserReadsMovieHeOwns($client, self::USER_2_MOVIES);
         $this->assertUserReadsNotOthersMovies($client, array_diff(self::USER_2_MOVIES, self::ALL_MOVIES));
-    }
-
-    public function test_user_3_only_reads_movies_he_owns(): void
-    {
-        $client = $this->getClientForCredentials('user3@example.com', 'user3');
-        $this->assertUserReadsMovieHeOwns($client, self::USER_3_MOVIES);
-        $this->assertUserReadsNotOthersMovies($client, array_diff(self::USER_3_MOVIES, self::ALL_MOVIES));
     }
 
     private function assertLoggedInUserIsMoviesOwner($username, $password): array

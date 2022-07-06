@@ -3,6 +3,9 @@ api_platform:
         route_prefix: '/v1'
     exception_to_status:
         'Symfony\Component\HttpKernel\Exception\NotFoundHttpException': 404
+        'ApiPlatform\Core\Validator\Exception\ValidationException': 422
+        'Symfony\Component\Serializer\Exception\NotNormalizableValueException': 422
+        
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:

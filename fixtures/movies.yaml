@@ -1,19 +1,27 @@
 App\Entity\Movie:
     movie_1:
-        name: <company()>
-        releaseDate: <datetime()>
-        director: '@director_*'
+        name: The Titanic
+        releaseDate: <(new \DateTime('1998-01-18'))>
+        director: '@director_cameron'
         owner: '@user1'
-        casts: '2x @actor*'
-    movie_{2..3}:
-        name: <company()>
-        releaseDate: <datetime()>
-        director: '@director_*'
+        casts: 
+            - '@actor_dicaprio'
+            - '@actor_kate'            
+    movie_2:
+        name: Back to the future
+        releaseDate: <(new \DateTime('1995-06-25'))>
+        director: '@director_spielberg'
         owner: '@user2'
         casts: '2x @actor*'
-    movie_{4..6}:
-        name: <company()>
-        releaseDate: <datetime()>
-        director: '@director_*'
-        owner: '@user3'
+        ratings:
+            - '@rating_t_2'
+            - '@rating_i_2'
+    movie_3:
+        name: Avatar
+        releaseDate: <(new \DateTime('2009-09-12'))>
+        director: '@director_cameron'
+        owner: '@user2'
         casts: '2x @actor*'
+        ratings: 
+            - '@rating_t_3'
+            - '@rating_i_3'
