@@ -13,19 +13,19 @@ class SecurityTest extends AbstractTest
 
     public function test_user_1_only_lists_movies_he_owns(): void
     {
-        $results = $this->assertUserPassIsOwner('user1@example.com', 'user1');
+        $results = $this->assertLoggedInUserIsMoviesOwner('user1@example.com', 'user1');
         $this->assertCount(1, $results);
     }
 
     public function test_user_2_only_lists_movies_he_owns(): void
     {
-        $results = $this->assertUserPassIsOwner('user2@example.com', 'user2');
+        $results = $this->assertLoggedInUserIsMoviesOwner('user2@example.com', 'user2');
         $this->assertCount(2, $results);
     }
 
     public function test_user_3_only_lists_movies_he_owns(): void
     {
-        $results = $this->assertUserPassIsOwner('user3@example.com', 'user3');
+        $results = $this->assertLoggedInUserIsMoviesOwner('user3@example.com', 'user3');
         $this->assertCount(3, $results);
     }
 
@@ -33,24 +33,24 @@ class SecurityTest extends AbstractTest
     {
         $client = $this->getClientForCredentials('user1@example.com', 'user1');
         $this->assertUserReadsMovieHeOwns($client, self::USER_1_MOVIES);
-        $this->assertUserDoesNotReadsOthersMovies($client, array_diff(self::USER_1_MOVIES, self::ALL_MOVIES));
+        $this->assertUserReadsNotOthersMovies($client, array_diff(self::USER_1_MOVIES, self::ALL_MOVIES));
     }
 
     public function test_user_2_only_reads_movies_he_owns(): void
     {
         $client = $this->getClientForCredentials('user2@example.com', 'user2');
         $this->assertUserReadsMovieHeOwns($client, self::USER_2_MOVIES);
-        $this->assertUserDoesNotReadsOthersMovies($client, array_diff(self::USER_2_MOVIES, self::ALL_MOVIES));
+        $this->assertUserReadsNotOthersMovies($client, array_diff(self::USER_2_MOVIES, self::ALL_MOVIES));
     }
 
     public function test_user_3_only_reads_movies_he_owns(): void
     {
         $client = $this->getClientForCredentials('user3@example.com', 'user3');
         $this->assertUserReadsMovieHeOwns($client, self::USER_3_MOVIES);
-        $this->assertUserDoesNotReadsOthersMovies($client, array_diff(self::USER_3_MOVIES, self::ALL_MOVIES));
+        $this->assertUserReadsNotOthersMovies($client, array_diff(self::USER_3_MOVIES, self::ALL_MOVIES));
     }
 
-    private function assertUserPassIsOwner($username, $password): array
+    private function assertLoggedInUserIsMoviesOwner($username, $password): array
     {
         $response = $this->getClientForCredentials($username, $password)
             ->request('GET', '/api/v1/movies');
@@ -73,7 +73,7 @@ class SecurityTest extends AbstractTest
         }
     }
 
-    private function assertUserDoesNotReadsOthersMovies(HttpClientInterface $client, array $others): void
+    private function assertUserReadsNotOthersMovies(HttpClientInterface $client, array $others): void
     {
         foreach ($others as $movieId){
             $response = $client->request('GET', "/api/v1/movies/$movieId");
