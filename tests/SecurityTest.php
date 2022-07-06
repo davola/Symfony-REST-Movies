@@ -8,7 +8,6 @@ class SecurityTest extends AbstractTest
 {
     private const USER_1_MOVIES = [1];
     private const USER_2_MOVIES = [2,3];
-    private const USER_3_MOVIES = [4,5,6];
     private const ALL_MOVIES = [1,2,3,4,5,6];
 
     public function test_user_1_only_lists_movies_he_owns(): void
