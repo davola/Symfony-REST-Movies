@@ -1,6 +1,19 @@
 App\Entity\Movie:
-    movie_{1..10}:
+    movie_{1..5}:
         name: <company()>
         releaseDate: <datetime()>
         director: '@director_*'
-        owner: '@user*'
+        owner: '@user1'
+        casts: '2x @actor*'
+    movie_{6..7}:
+        name: <company()>
+        releaseDate: <datetime()>
+        director: '@director_*'
+        owner: '@user2'
+        casts: '2x @actor*'
+    movie_{8..10}:
+        name: <company()>
+        releaseDate: <datetime()>
+        director: '@director_*'
+        owner: '@user3'
+        casts: '2x @actor*'
