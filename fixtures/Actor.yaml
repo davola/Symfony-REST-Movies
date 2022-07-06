@@ -1,3 +1,7 @@
 App\Entity\Actor:
+    actor_dicaprio:
+        name: 'DiCaprio'
+    actor_kate:
+        name: 'Kate Winslet'
     actor{1..20}:
         name: '<name()>'

@@ -53,6 +53,7 @@ class Movie
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull()
      */
     private $director;
 
@@ -66,7 +67,7 @@ class Movie
      * @ORM\Column(type="date", nullable=false)
      * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "d-m-Y" })
      * @Groups({"movies:read", "movies:write"})
-     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $releaseDate;
 
@@ -109,8 +110,7 @@ class Movie
         return $this->casts;
     }
 
-
-    public function setCasts(ArrayCollection $casts): self
+    private function setCasts(ArrayCollection $casts): self
     {
         $this->casts = $casts;
 
@@ -189,7 +189,7 @@ class Movie
      * @Groups({"movies:write"})
      * @SerializedName("director")
      */
-    public function setDirectorByName(string $name): self
+    public function setDirectorByName($name): self
     {
         $director = (new Director())->setName($name);
         $this->setDirector($director);
@@ -200,7 +200,7 @@ class Movie
     /**
      * @return Collection<int, Rating>
      */
-    private function getRatings(): Collection
+    public function getRatings(): Collection
     {
         return $this->ratings;
     }

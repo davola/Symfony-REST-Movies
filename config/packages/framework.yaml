@@ -26,5 +26,9 @@ when@test:
             Symfony\Component\HttpKernel\Exception\NotFoundHttpException:
                 log_level: debug
                 status_code: 404
-
-            
+            ApiPlatform\Core\Validator\Exception\ValidationException:
+                log_level: debug
+                status_code: 422
+            Symfony\Component\Serializer\Exception\NotNormalizableValueException:
+                log_level: debug
+                status_code: 422

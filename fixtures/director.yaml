@@ -1,3 +1,5 @@
 App\Entity\Director:
-    director_{1..10}:
-        name: <name()>
+    director_cameron:
+        name: James Cameron
+    director_spielberg:
+        name: Steven Spielberg

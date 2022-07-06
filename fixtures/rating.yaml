@@ -1,10 +1,18 @@
 App\Entity\Rating:
-    rating1_a{@movie_*}:
+    rating_imdb:
+        name: 'imdb'
+        value: 7.8
+        movie: '@movie_1'
+    rating_tomatto:
+        name: 'rotten_tomatto'
+        value: 8.2
+        movie: '@movie_1'
+    rating_i_{2..3}:
         name: 'imdb'
         value: '<numberBetween(3, 10)>'
-        movie: '<current()>'
-    rating_b{@movie_*}:
+        movie: '@movie_<current()>'
+    rating_t_{2..3}:
         name: 'tomato'
         value: '<numberBetween(3, 10)>'
-        movie: '<current()>'
+        movie: '@movie_<current()>'
         
