@@ -11,6 +11,15 @@ class MoviesTest extends AbstractTest
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/json; charset=utf-8');
-        $this->assertCount(5, $response->toArray());
+        $this->assertCount(1, $response->toArray());
+    }
+
+    public function testGetMovie1(): void
+    {
+        $response = $this->getClientForCredentials('user1@example.com', 'user1')
+            ->request('GET', '/api/v1/movies/1', []);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/json; charset=utf-8');
     }
 }

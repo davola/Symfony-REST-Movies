@@ -31,7 +31,7 @@ abstract class AbstractTest extends ApiTestCase
 
         static::$client = static::createClient([], [
                 'headers' => [
-                    'Accept' => 'application/json'
+                    'Accept' => '*/*'
                 ]
             ]
         );
@@ -41,7 +41,7 @@ abstract class AbstractTest extends ApiTestCase
     {
         return static::createClient([], [
                 'headers' => [
-                    'Accept' => 'application/json'
+                    'Accept' => '*/*'
                 ]
             ]
         );
@@ -55,8 +55,8 @@ abstract class AbstractTest extends ApiTestCase
             'headers' => [
                 'Authorization' => "Bearer $token",
                 'Accept' => '*/*',
-            ]]
-        );
+            ]
+        ]);
     }
 
     /**
