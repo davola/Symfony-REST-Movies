@@ -1,126 +1,283 @@
-# Movies Task
+# Movies API test project
 
-## Introduction
+This repository contains a small symfony REST API to show some backend development skills.
 
-This task is intended to demonstrate basic technical skillsets to build/manage REST api endpoint with Symfony PHP framework. 
-We need to understand the capacity of the candidate about the way he thinks to build a better maintainable and scalable web application from the scratch that includes
-usage of engineering best practices, architecture and best use of design principles during decision making process.
+## Technologies
 
+This project was developed using the following tech stack:
 
-## The Task
+- PHP v7.4
+- Postgres v13
+- Symfony v5.4 LTS
+- Api-Platform v2.6.8
 
-The task is to create a minimal Symfony web application to develop and expore some REST endpoint for end-user to consume.
+## Main packages and technologies used
 
-### A) Bootstrapping
-- Bootstrap a new Symfony application according to [Symfony best practices](https://symfony.com/doc/current/best_practices.html)
-- Containerize the application, so reviewing and developing the task would be much more easier without having any platform constraint
+### Security
 
-### B) Create REST Api endpoints
+- `symfony/security-bundle` to handle all the API security
+- `lexik/jwt-authentication-bundle` for JWT tokens support
 
-Create the following functional API endpoints
+### Databases and ORM
 
-#### POST /api/v1/movies
+- `doctrine/doctrine-bundle` v2.7.0 for the ORM
+- `doctrine/doctrine-migrations-bundle` to keep the database in sync with the entities
+  
+### Testing
 
-```
-POST /api/v1/movies
-```
+- `phpunit/phpunit` for handling all the unit testings 
+- `symfony/phpunit-bridge` the symfony phpunit implementation
+- `theofidry/alice-data-fixtures` for fixtures handling
 
-Payload entity:
+### Containerization
+ - `docker` with `docker-compose`
 
-```
-{
-    "name": "The Titanic",
-    "casts":[
-        "DiCaprio",
-        "Kate Winslet"
-    ],
-    "release_date": "18-01-1998",
-    "director": "James Cameron",
-    "ratings": {
-        "imdb": 7.8,
-        "rotten_tomatto": 8.2
-    }
-}
-```
+# Installation
 
-#### GET /api/v1/movies/{id}
+1. Before running the environment you need to create your own local `env.local` file.  
+This will hold all your local overwrites to setup the GMAIL account creds, needed to send emails.  
+_(If you don't have a valid gmail account, by default sending emails is disabled)_
 
-```
-GET /api/v1/movies/{id}
+```shell
+# env.local
+MAILER_DSN=gmail://GMAIL_USERNAME:GMAIL_PASSWORD@default
+EMAIL_FROM=YOUR_GMAIL_USERNAME
 ```
 
-Example response:
+2. You need to clone this repository on any host machine with docker and start the project with:
+```shell
+docker compose up --build
+```
 
+3. Once the build is complete, and the docker environment is up, you can run a command to initialize the application
+
+```shell
+docker-compose exec -T php sh bin/reset_db.sh
 ```
-{
-    "name": "The Titanic",
-    "casts":[
-        "DiCaprio",
-        "Kate Winslet"
-    ],
-    "release_date": "18-01-1998",
-    "director": "James Cameron",
-    "ratings": {
-        "imdb": 7.8,
-        "rotten_tomatto": 8.2
-    }
-}
+
+This `reset_db.sh` script will do the following:
+
+- drop the app database
+- recreate the app database
+- create the needed JWT certificates
+- run the fixtures
+
+You can provide the environment as a parameter to apply the same for test environment, as in:
+- `sh bin/reset_db.sh test`
+
+# API Usage
+
+Now the API should be ready to be used. 
+
+I've created and used Data Normalizer, Denormalizers, Persisters, Decorators (to show the login endpoint over the UI) 
+and Subscribers and lots of configurations to support all the API features included.
+
+## Api platform UI
+
+For your convenience I have left the api-platform UI ready to be used.  
+You can access the API UI navigating to `https://localhost/api/docs`  
+You should accept all the certificates to access the pages.
+
+## JWT access
+
+All the endpoints are secured by JWT tokens.  
+Here you have a list of 2 sample users creds that are loaded within the fixtures:
+- username: `user1@example.com`
+- password: `user1`
+
+Similar as with `user2@example.com` and `user2`.
+
+## Endpoints
+
+You can run the endpoints with ease on the API tool you like the most, like in my case postman.
+
+### JWT Login
+
+Here you have the login endpoint where you get the Bearer token to be set on the Authorization header.
+
+
+#### POST /api/login_check
+
+Request
+```shell
+curl --location --request POST 'https://localhost/api/login_check' \
+    --header 'x-debug-token: true' \
+    --header 'x-debug-token-link: true' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "username":"user1@example.com",
+        "password":"user1"
+    }'
 ```
+Sample response:
+```json
+{"token":"some-JWT-token"}
+```
+
+### GET Movies
+
+List all the movies for the user.  
+I have left the Movie ID and a new node owner on purpose, for easier testability.  
+The rest of the response is exactly the same as requested on the task.  
 
 #### GET /api/v1/movies
 
+Request:
+```shell
+curl --location --request GET 'https://localhost/api/v1/movies' \
+--header 'Authorization: Bearer the-token-you-fetched-earlier'
 ```
-GET /api/v1/movies
-```
-
-Expected result format:
-
-```
+Sample response:
+```json
 [
     {
+        "id": 1,
         "name": "The Titanic",
-        "casts":[
+        "casts": [
             "DiCaprio",
             "Kate Winslet"
         ],
-        "release_date": "18-01-1998",
-        "director": "James Cameron",
         "ratings": {
             "imdb": 7.8,
             "rotten_tomatto": 8.2
-        }
+        },
+        "release_date": "18-01-1998",
+        "owner": {
+            "email": "user1@example.com"
+        },
+        "director": "James Cameron"
     }
 ]
 ```
 
-### Business Logic
+### GET Movies detail
 
+Show the Movie details for the {id} provided
+
+#### GET /api/v1/movies/{id}
+
+Request:
+```shell
+curl --location --request GET 'https://localhost/api/v1/movies/1' \
+--header 'Authorization: Bearer the-token-you-fetched-earlier'
+```
+Sample response:
+```json
+{
+    "id": 1,
+    "name": "The Titanic",
+    "casts": [
+        "DiCaprio",
+        "Kate Winslet"
+    ],
+    "ratings": {
+        "imdb": 7.8,
+        "rotten_tomatto": 8.2
+    },
+    "release_date": "18-01-1998",
+    "owner": {
+        "email": "user1@example.com"
+    },
+    "director": "James Cameron"
+}
+```
+
+### POST Movies
+
+Creates a movie for the logged in user.  
+All the fields are required as instructed.  
+When adding a Movie, an email is sent to the owner.
+
+#### POST /api/v1/movies
+
+Request:
+```shell
+curl --location --request POST 'https://localhost/api/v1/movies' \
+--header 'Authorization: Bearer the-token-you-fetched-earlier' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Alien",
+    "casts":[
+        "Sigourney Weaver",
+        "Harry Dean Stanton"
+    ],
+    "release_date": "05-05-1979",
+    "director": "Ridley Scott",
+    "ratings": {
+        "imdb": 9.9,
+        "rotten_tomatto": 7.9
+    }
+}'
+```
+
+Sample response:
+```json
+{
+    "id": 4,
+    "name": "Alien",
+    "casts": [
+        "Sigourney Weaver",
+        "Harry Dean Stanton"
+    ],
+    "ratings": {
+        "imdb": 9.9,
+        "rotten_tomatto": 7.9
+    },
+    "release_date": "05-05-1979",
+    "owner": {
+        "email": "user1@example.com"
+    },
+    "director": "Ridley Scott"
+}
+```
+
+## Test, tests and more tests.
+
+You can find all the unit tests on the `tests/` folder.
+
+You can run them with phpunit:
+```shell
+docker-compose exec -T php vendor/bin/phpunit
+```
+
+I have created 3 testing classes (and one main abstract class) to cover all the API features requested:
+
+#### Security tests
 - User only can see his own movies that he created
 - User can not see other's movie details that other user created
+
+#### Movies tests
 - Fields must be validated, if validation failed or any field missing API should return some error message
 - On every movie added to database, user will get notified via email
 
-### Requirements
-- Must be developed in Symfony 5.4 LTS version, PHP 7.4
-- Unit tests must be available that should include at least all the business logic
-- Use Database (any database that you prefer)
-- Project must include a README with clear instructions for reviewer
+#### Auth tests
+- Only Valid credentials can get a valid token
+- Missing Auth header requests can't access endpoints
 
-### Additional requirements (optional & nice to have)
-- Add use cases in unit tests as much as possible
-- Add a GitHub CI workflow
+## Github CI workflow
 
-### Engineering Tips & Hints
+I have setup a github CI workflow, where on every PR or PUSH event, the image gets build, 
+and the tests are fire.  
+If any test fail, the build process will be labeled as failed.  
+Later we could integrate this with some kubernetes flow to deploy the image on success or any
+other common/desired CI/CD procedures.
 
-- [SOLID principles](https://en.wikipedia.org/wiki/SOLID)
-- [Composition over Inheritence principle](https://en.wikipedia.org/wiki/Composition_over_inheritance)
-- Mocking and usage of Data Provider for Unit Tests
-- Separation of business logic and controller
+## Conclusion
 
+I hope I'm not forgetting anything.  
 
-## How to submit the project
+Didn't want to write comments on the code, as it seems to be ease to understand and short, but I can add  
+comments on the code if you want me to walk you through it.
 
-- Create a public GitHub repository
-- Send us the link of the repository by mail
+I have tested this many times, but you know, if anything fails, please don't hesitate to contact me. _(I've left my email at the bottom)_
 
-If you have any questions, please feel free to write us
+There is still lots of room to keep improving it, like normalizing the error handling (I did something quick, just to  
+avoid having 500 errors on some validations), and optimizing the model to avoid having duplicated entities with the same  
+value, but nothing that is fairly simple to add just having more time to spend to.
+
+I have to say It was hard to get the time needed to accomplish all this having a full time daily job, 3 kids and a wife. (and 2 cats 😄😸)
+
+Thanks a lot!
+
+Diego.  
+davola@underscreen.com

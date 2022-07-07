@@ -22,7 +22,7 @@ class MoviesTest extends AbstractTest
         ],
     ];
 
-    private const MOVIE_ALIEN = [
+    public const MOVIE_ALIEN = [
         'name' => 'Alien',
         'casts' => [
             'Sigourney Weaver',
