@@ -1,6 +1,6 @@
 # Movies API test project
 
-This repository contains a small symfony REST API running on top of the following technologies:
+This repository contains a small symfony REST API to show some backend development skills.
 
 ## Technologies
 
