@@ -34,9 +34,9 @@ This project was developed using the following tech stack:
 
 # Installation
 
-Before running the environment you need to create your own local `env.local` file, to hold all your 
-local values overwrites to setup the GMAIL account creds, used to send the emails. 
-(If you don't have a valid gmail account, by default sending emails is disabled)
+Before running the environment you need to create your own local `env.local` file.  
+This will hold all your local overwrites to setup the GMAIL account creds, needed to send emails.  
+_(If you don't have a valid gmail account, by default sending emails is disabled)_
 
 ```shell
 # env.local
@@ -89,7 +89,8 @@ Similar as with `user2@example.com` and `user2`.
 You can run the endpoints with ease on the API tool you like the most, like in my case postman.
 
 ### JWT Login
-Here you get the token to be set on the Authorization header as the Bearer token.
+
+Here you have the login endpoint where you get the Bearer token to be set on the Authorization header.
 
 #### POST /api/login_check
 
@@ -111,9 +112,9 @@ Sample response:
 
 ### GET Movies
 
-List all the movies for the user.
-I have left the Movie ID and a new node owner on purpose, for easier testability.
-The rest of the response is exactly the same as requested on the task.
+List all the movies for the user.  
+I have left the Movie ID and a new node owner on purpose, for easier testability.  
+The rest of the response is exactly the same as requested on the task.  
 
 #### GET /api/v1/movies
 
@@ -147,7 +148,7 @@ Sample response:
 
 ### GET Movies detail
 
-Show the Movie details
+Show the Movie details for the {id} provided
 
 #### GET /api/v1/movies/{id}
 
@@ -179,7 +180,9 @@ Sample response:
 
 ### POST Movies
 
-Creates a movie for the logged in user.
+Creates a movie for the logged in user.  
+All the fields are required as instructed.  
+When adding a Movie, an email is sent to the owner.
 
 #### POST /api/v1/movies
 
@@ -228,7 +231,7 @@ Sample response:
 
 You can find all the unit tests on the `tests/` folder.
 
-you can run them with phpunit:
+You can run them with phpunit:
 ```shell
 docker-compose exec -T php vendor/bin/phpunit
 ```
