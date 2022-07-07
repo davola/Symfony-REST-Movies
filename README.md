@@ -252,3 +252,14 @@ and the tests are fire.
 If any test fail, the build process will be labeled as failed.  
 Later we could integrate this with some kubernetes flow to deploy the image on success or any
 other common/desired CI/CD procedures.
+
+## Conclusion
+
+I hope I'm not forgetting anything.  
+It was hard to get the time needed to accomplish all this having a full time daily job, 3 kids and a wife. (and 2 cats 😄😸)  
+I have tested this many times, but you know, if anything fails, please don't hesitate to contact me.
+
+Thanks a lot!
+
+Diego.
+davola@underscreen.com
