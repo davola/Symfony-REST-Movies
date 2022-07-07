@@ -67,7 +67,10 @@ You can provide the environment as a parameter to apply the same for test enviro
 
 # API Usage
 
-Now the API should be ready to be used.
+Now the API should be ready to be used. 
+
+I've created and used Data Normalizer, Denormalizers, Persisters, Decorators (to show the login endpoint over the UI) 
+and Subscribers and lots of configurations to support all the API features included.
 
 ## Api platform UI
 
@@ -91,6 +94,7 @@ You can run the endpoints with ease on the API tool you like the most, like in m
 ### JWT Login
 
 Here you have the login endpoint where you get the Bearer token to be set on the Authorization header.
+
 
 #### POST /api/login_check
 
@@ -261,10 +265,11 @@ other common/desired CI/CD procedures.
 ## Conclusion
 
 I hope I'm not forgetting anything.  
+
 Didn't want to write comments on the code, as it seems to be ease to understand and short, but I can add  
 comments on the code if you want me to walk you through it.
 
-I have tested this many times, but you know, if anything fails, please don't hesitate to contact me. (I left my email on the bottom)
+I have tested this many times, but you know, if anything fails, please don't hesitate to contact me. _(I've left my email at the bottom)_
 
 There is still lots of room to keep improving it, like normalizing the error handling (I did something quick, just to  
 avoid having 500 errors on some validations), and optimizing the model to avoid having duplicated entities with the same  
