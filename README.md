@@ -256,10 +256,18 @@ other common/desired CI/CD procedures.
 ## Conclusion
 
 I hope I'm not forgetting anything.  
-It was hard to get the time needed to accomplish all this having a full time daily job, 3 kids and a wife. (and 2 cats 😄😸)  
-I have tested this many times, but you know, if anything fails, please don't hesitate to contact me.
+Didn't want to write comments on the code, as it seems to be ease to understand and short, but I can add  
+comments on the code if you want me to walk you through it.
+
+I have tested this many times, but you know, if anything fails, please don't hesitate to contact me. (I left my email on the bottom)
+
+There is still lots of room to keep improving it, like normalizing the error handling (I did something quick, just to  
+avoid having 500 errors on some validations), and optimizing the model to avoid having duplicated entities with the same  
+value, but nothing that is fairly simple to add just having more time to spend to.
+
+I have to say It was hard to get the time needed to accomplish all this having a full time daily job, 3 kids and a wife. (and 2 cats 😄😸)
 
 Thanks a lot!
 
-Diego.
+Diego.  
 davola@underscreen.com
