@@ -34,7 +34,7 @@ This project was developed using the following tech stack:
 
 # Installation
 
-Before running the environment you need to create your own local `env.local` file.  
+1. Before running the environment you need to create your own local `env.local` file.  
 This will hold all your local overwrites to setup the GMAIL account creds, needed to send emails.  
 _(If you don't have a valid gmail account, by default sending emails is disabled)_
 
@@ -44,12 +44,12 @@ MAILER_DSN=gmail://GMAIL_USERNAME:GMAIL_PASSWORD@default
 EMAIL_FROM=YOUR_GMAIL_USERNAME
 ```
 
-1. You need to clone this repository on any host machine with docker and start the project with:
+2. You need to clone this repository on any host machine with docker and start the project with:
 ```shell
 docker compose up --build
 ```
 
-2. Once the build is complete, and the docker environment is up, you can run a command to initialize the application
+3. Once the build is complete, and the docker environment is up, you can run a command to initialize the application
 
 ```shell
 docker-compose exec -T php sh bin/reset_db.sh
