@@ -1,15 +1,17 @@
-# Movies API
-
-## API Description
+# Movies API test project
 
 This repository contains a small symfony REST API running on top of the following technologies:
 
+## Technologies
+
+This project was developed using the following tech stack:
+
 - PHP v7.4
+- Postgres v13
 - Symfony v5.4 LTS
 - Api-Platform v2.6.8
-- Postgres v13
 
-## Packages and technologies used on this project
+## Main packages and technologies used
 
 ### Security
 
